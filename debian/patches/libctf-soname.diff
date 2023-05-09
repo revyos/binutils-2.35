@@ -1,0 +1,755 @@
+--- a/libctf/Makefile.am
++++ b/libctf/Makefile.am
+@@ -32,23 +32,24 @@ AM_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)
+ AM_CFLAGS = -std=gnu99 @ac_libctf_warn_cflags@ @warn@ @c_warn@ @WARN_PEDANTIC@ @WERROR@ $(ZLIBINC)
+ 
+ if INSTALL_LIBBFD
+-lib_LTLIBRARIES = libctf.la libctf-nobfd.la
++lib_LTLIBRARIES = libctf@CTF_SOVER_EXT@.la libctf-nobfd@CTF_SOVER_EXT@.la
+ include_HEADERS = $(INCDIR)/ctf.h $(INCDIR)/ctf-api.h
+ else
+ include_HEADERS =
+-noinst_LTLIBRARIES = libctf.la libctf-nobfd.la
++noinst_LTLIBRARIES = libctf@CTF_SOVER_EXT@.la libctf-nobfd@CTF_SOVER_EXT@.la
+ endif
+ 
+-libctf_nobfd_la_LIBADD = @SHARED_LIBADD@ $(ZLIB)
+-libctf_nobfd_la_LDFLAGS = -version-info 0:0:0 @SHARED_LDFLAGS@ @VERSION_FLAGS@
+-libctf_nobfd_la_SOURCES = ctf-archive.c ctf-dump.c ctf-create.c ctf-decl.c ctf-error.c \
++COMMON_LIB_SOURCES = ctf-archive.c ctf-dump.c ctf-create.c ctf-decl.c ctf-error.c \
+ 			  ctf-hash.c ctf-labels.c ctf-link.c ctf-lookup.c ctf-open.c \
+ 			  ctf-string.c ctf-subr.c ctf-types.c ctf-util.c
+ if NEED_CTF_QSORT_R
+-libctf_nobfd_la_SOURCES += ctf-qsort_r.c
++COMMON_LIB_SOURCES += ctf-qsort_r.c
+ endif
++libctf_nobfd@CTF_SOVER_EXT@_la_LIBADD = @SHARED_LIBADD@ $(ZLIB)
++libctf_nobfd@CTF_SOVER_EXT@_la_LDFLAGS = -version-info 0:0:0 @SHARED_LDFLAGS@ @VERSION_FLAGS@
++libctf_nobfd@CTF_SOVER_EXT@_la_SOURCES = $(COMMON_LIB_SOURCES)
+ 
+-libctf_la_LIBADD = @BFD_LIBADD@ $(libctf_nobfd_la_LIBADD)
+-libctf_la_DEPENDENCIES = @BFD_DEPENDENCIES@
+-libctf_la_LDFLAGS = $(libctf_nobfd_la_LDFLAGS)
+-libctf_la_SOURCES = $(libctf_nobfd_la_SOURCES) ctf-open-bfd.c
++libctf@CTF_SOVER_EXT@_la_LIBADD = @BFD_LIBADD@ $(libctf_nobfd@CTF_SOVER_EXT@_la_LIBADD)
++libctf@CTF_SOVER_EXT@_la_DEPENDENCIES = @BFD_DEPENDENCIES@
++libctf@CTF_SOVER_EXT@_la_LDFLAGS = $(libctf_nobfd@CTF_SOVER_EXT@_la_LDFLAGS)
++libctf@CTF_SOVER_EXT@_la_SOURCES = $(COMMON_LIB_SOURCES) ctf-open-bfd.c
+--- a/libctf/Makefile.in
++++ b/libctf/Makefile.in
+@@ -162,43 +162,44 @@ am__uninstall_files_from_dir = { \
+ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
+ LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
+ am__DEPENDENCIES_1 =
+-libctf_nobfd_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+-am__libctf_nobfd_la_SOURCES_DIST = ctf-archive.c ctf-dump.c \
+-	ctf-create.c ctf-decl.c ctf-error.c ctf-hash.c ctf-labels.c \
+-	ctf-link.c ctf-lookup.c ctf-open.c ctf-string.c ctf-subr.c \
+-	ctf-types.c ctf-util.c ctf-qsort_r.c
++libctf_nobfd@CTF_SOVER_EXT@_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
++am__libctf_nobfd@CTF_SOVER_EXT@_la_SOURCES_DIST = ctf-archive.c \
++	ctf-dump.c ctf-create.c ctf-decl.c ctf-error.c ctf-hash.c \
++	ctf-labels.c ctf-link.c ctf-lookup.c ctf-open.c ctf-string.c \
++	ctf-subr.c ctf-types.c ctf-util.c ctf-qsort_r.c
+ @NEED_CTF_QSORT_R_TRUE@am__objects_1 = ctf-qsort_r.lo
+-am_libctf_nobfd_la_OBJECTS = ctf-archive.lo ctf-dump.lo ctf-create.lo \
+-	ctf-decl.lo ctf-error.lo ctf-hash.lo ctf-labels.lo ctf-link.lo \
++am__objects_2 = ctf-archive.lo ctf-dump.lo ctf-create.lo ctf-decl.lo \
++	ctf-error.lo ctf-hash.lo ctf-labels.lo ctf-link.lo \
+ 	ctf-lookup.lo ctf-open.lo ctf-string.lo ctf-subr.lo \
+ 	ctf-types.lo ctf-util.lo $(am__objects_1)
+-libctf_nobfd_la_OBJECTS = $(am_libctf_nobfd_la_OBJECTS)
++am_libctf_nobfd@CTF_SOVER_EXT@_la_OBJECTS = $(am__objects_2)
++libctf_nobfd@CTF_SOVER_EXT@_la_OBJECTS =  \
++	$(am_libctf_nobfd@CTF_SOVER_EXT@_la_OBJECTS)
+ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ am__v_lt_1 = 
+-libctf_nobfd_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
++libctf_nobfd@CTF_SOVER_EXT@_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+ 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+-	$(AM_CFLAGS) $(CFLAGS) $(libctf_nobfd_la_LDFLAGS) $(LDFLAGS) \
+-	-o $@
+-@INSTALL_LIBBFD_FALSE@am_libctf_nobfd_la_rpath =
+-@INSTALL_LIBBFD_TRUE@am_libctf_nobfd_la_rpath = -rpath $(libdir)
+-am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+-am__libctf_la_SOURCES_DIST = ctf-archive.c ctf-dump.c ctf-create.c \
+-	ctf-decl.c ctf-error.c ctf-hash.c ctf-labels.c ctf-link.c \
+-	ctf-lookup.c ctf-open.c ctf-string.c ctf-subr.c ctf-types.c \
+-	ctf-util.c ctf-qsort_r.c ctf-open-bfd.c
+-am__objects_2 = ctf-archive.lo ctf-dump.lo ctf-create.lo ctf-decl.lo \
+-	ctf-error.lo ctf-hash.lo ctf-labels.lo ctf-link.lo \
+-	ctf-lookup.lo ctf-open.lo ctf-string.lo ctf-subr.lo \
+-	ctf-types.lo ctf-util.lo $(am__objects_1)
+-am_libctf_la_OBJECTS = $(am__objects_2) ctf-open-bfd.lo
+-libctf_la_OBJECTS = $(am_libctf_la_OBJECTS)
+-libctf_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+-	$(libctf_la_LDFLAGS) $(LDFLAGS) -o $@
+-@INSTALL_LIBBFD_FALSE@am_libctf_la_rpath =
+-@INSTALL_LIBBFD_TRUE@am_libctf_la_rpath = -rpath $(libdir)
++	$(AM_CFLAGS) $(CFLAGS) \
++	$(libctf_nobfd@CTF_SOVER_EXT@_la_LDFLAGS) $(LDFLAGS) -o $@
++@INSTALL_LIBBFD_FALSE@am_libctf_nobfd@CTF_SOVER_EXT@_la_rpath =
++@INSTALL_LIBBFD_TRUE@am_libctf_nobfd@CTF_SOVER_EXT@_la_rpath = -rpath \
++@INSTALL_LIBBFD_TRUE@	$(libdir)
++am__libctf@CTF_SOVER_EXT@_la_SOURCES_DIST = ctf-archive.c ctf-dump.c \
++	ctf-create.c ctf-decl.c ctf-error.c ctf-hash.c ctf-labels.c \
++	ctf-link.c ctf-lookup.c ctf-open.c ctf-string.c ctf-subr.c \
++	ctf-types.c ctf-util.c ctf-qsort_r.c ctf-open-bfd.c
++am_libctf@CTF_SOVER_EXT@_la_OBJECTS = $(am__objects_2) ctf-open-bfd.lo
++libctf@CTF_SOVER_EXT@_la_OBJECTS =  \
++	$(am_libctf@CTF_SOVER_EXT@_la_OBJECTS)
++libctf@CTF_SOVER_EXT@_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
++	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
++	$(AM_CFLAGS) $(CFLAGS) $(libctf@CTF_SOVER_EXT@_la_LDFLAGS) \
++	$(LDFLAGS) -o $@
++@INSTALL_LIBBFD_FALSE@am_libctf@CTF_SOVER_EXT@_la_rpath =
++@INSTALL_LIBBFD_TRUE@am_libctf@CTF_SOVER_EXT@_la_rpath = -rpath \
++@INSTALL_LIBBFD_TRUE@	$(libdir)
+ AM_V_P = $(am__v_P_@AM_V@)
+ am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
+ am__v_P_0 = false
+@@ -233,9 +234,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+ am__v_CCLD_0 = @echo "  CCLD    " $@;
+ am__v_CCLD_1 = 
+-SOURCES = $(libctf_nobfd_la_SOURCES) $(libctf_la_SOURCES)
+-DIST_SOURCES = $(am__libctf_nobfd_la_SOURCES_DIST) \
+-	$(am__libctf_la_SOURCES_DIST)
++SOURCES = $(libctf_nobfd@CTF_SOVER_EXT@_la_SOURCES) \
++	$(libctf@CTF_SOVER_EXT@_la_SOURCES)
++DIST_SOURCES = $(am__libctf_nobfd@CTF_SOVER_EXT@_la_SOURCES_DIST) \
++	$(am__libctf@CTF_SOVER_EXT@_la_SOURCES_DIST)
+ am__can_run_installinfo = \
+   case $$AM_UPDATE_INFO_DIR in \
+     n|no|NO) false;; \
+@@ -305,6 +307,7 @@ CCDEPMODE = @CCDEPMODE@
+ CFLAGS = @CFLAGS@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
++CTF_SOVER_EXT = @CTF_SOVER_EXT@
+ CYGPATH_W = @CYGPATH_W@
+ DATADIRNAME = @DATADIRNAME@
+ DEFS = @DEFS@
+@@ -438,20 +441,21 @@ ZLIBINC = @zlibinc@
+ INCDIR = $(srcdir)/../include
+ AM_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir) -I$(srcdir)/../include -I$(srcdir)/../bfd -I../bfd
+ AM_CFLAGS = -std=gnu99 @ac_libctf_warn_cflags@ @warn@ @c_warn@ @WARN_PEDANTIC@ @WERROR@ $(ZLIBINC)
+-@INSTALL_LIBBFD_TRUE@lib_LTLIBRARIES = libctf.la libctf-nobfd.la
++@INSTALL_LIBBFD_TRUE@lib_LTLIBRARIES = libctf@CTF_SOVER_EXT@.la libctf-nobfd@CTF_SOVER_EXT@.la
+ @INSTALL_LIBBFD_FALSE@include_HEADERS = 
+ @INSTALL_LIBBFD_TRUE@include_HEADERS = $(INCDIR)/ctf.h $(INCDIR)/ctf-api.h
+-@INSTALL_LIBBFD_FALSE@noinst_LTLIBRARIES = libctf.la libctf-nobfd.la
+-libctf_nobfd_la_LIBADD = @SHARED_LIBADD@ $(ZLIB)
+-libctf_nobfd_la_LDFLAGS = -version-info 0:0:0 @SHARED_LDFLAGS@ @VERSION_FLAGS@
+-libctf_nobfd_la_SOURCES = ctf-archive.c ctf-dump.c ctf-create.c \
+-	ctf-decl.c ctf-error.c ctf-hash.c ctf-labels.c ctf-link.c \
+-	ctf-lookup.c ctf-open.c ctf-string.c ctf-subr.c ctf-types.c \
+-	ctf-util.c $(am__append_1)
+-libctf_la_LIBADD = @BFD_LIBADD@ $(libctf_nobfd_la_LIBADD)
+-libctf_la_DEPENDENCIES = @BFD_DEPENDENCIES@
+-libctf_la_LDFLAGS = $(libctf_nobfd_la_LDFLAGS)
+-libctf_la_SOURCES = $(libctf_nobfd_la_SOURCES) ctf-open-bfd.c
++@INSTALL_LIBBFD_FALSE@noinst_LTLIBRARIES = libctf@CTF_SOVER_EXT@.la libctf-nobfd@CTF_SOVER_EXT@.la
++COMMON_LIB_SOURCES = ctf-archive.c ctf-dump.c ctf-create.c ctf-decl.c \
++	ctf-error.c ctf-hash.c ctf-labels.c ctf-link.c ctf-lookup.c \
++	ctf-open.c ctf-string.c ctf-subr.c ctf-types.c ctf-util.c \
++	$(am__append_1)
++libctf_nobfd@CTF_SOVER_EXT@_la_LIBADD = @SHARED_LIBADD@ $(ZLIB)
++libctf_nobfd@CTF_SOVER_EXT@_la_LDFLAGS = -version-info 0:0:0 @SHARED_LDFLAGS@ @VERSION_FLAGS@
++libctf_nobfd@CTF_SOVER_EXT@_la_SOURCES = $(COMMON_LIB_SOURCES)
++libctf@CTF_SOVER_EXT@_la_LIBADD = @BFD_LIBADD@ $(libctf_nobfd@CTF_SOVER_EXT@_la_LIBADD)
++libctf@CTF_SOVER_EXT@_la_DEPENDENCIES = @BFD_DEPENDENCIES@
++libctf@CTF_SOVER_EXT@_la_LDFLAGS = $(libctf_nobfd@CTF_SOVER_EXT@_la_LDFLAGS)
++libctf@CTF_SOVER_EXT@_la_SOURCES = $(COMMON_LIB_SOURCES) ctf-open-bfd.c
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-am
+ 
+@@ -552,11 +556,11 @@ clean-noinstLTLIBRARIES:
+ 	  rm -f $${locs}; \
+ 	}
+ 
+-libctf-nobfd.la: $(libctf_nobfd_la_OBJECTS) $(libctf_nobfd_la_DEPENDENCIES) $(EXTRA_libctf_nobfd_la_DEPENDENCIES) 
+-	$(AM_V_CCLD)$(libctf_nobfd_la_LINK) $(am_libctf_nobfd_la_rpath) $(libctf_nobfd_la_OBJECTS) $(libctf_nobfd_la_LIBADD) $(LIBS)
++libctf-nobfd@CTF_SOVER_EXT@.la: $(libctf_nobfd@CTF_SOVER_EXT@_la_OBJECTS) $(libctf_nobfd@CTF_SOVER_EXT@_la_DEPENDENCIES) $(EXTRA_libctf_nobfd@CTF_SOVER_EXT@_la_DEPENDENCIES) 
++	$(AM_V_CCLD)$(libctf_nobfd@CTF_SOVER_EXT@_la_LINK) $(am_libctf_nobfd@CTF_SOVER_EXT@_la_rpath) $(libctf_nobfd@CTF_SOVER_EXT@_la_OBJECTS) $(libctf_nobfd@CTF_SOVER_EXT@_la_LIBADD) $(LIBS)
+ 
+-libctf.la: $(libctf_la_OBJECTS) $(libctf_la_DEPENDENCIES) $(EXTRA_libctf_la_DEPENDENCIES) 
+-	$(AM_V_CCLD)$(libctf_la_LINK) $(am_libctf_la_rpath) $(libctf_la_OBJECTS) $(libctf_la_LIBADD) $(LIBS)
++libctf@CTF_SOVER_EXT@.la: $(libctf@CTF_SOVER_EXT@_la_OBJECTS) $(libctf@CTF_SOVER_EXT@_la_DEPENDENCIES) $(EXTRA_libctf@CTF_SOVER_EXT@_la_DEPENDENCIES) 
++	$(AM_V_CCLD)$(libctf@CTF_SOVER_EXT@_la_LINK) $(am_libctf@CTF_SOVER_EXT@_la_rpath) $(libctf@CTF_SOVER_EXT@_la_OBJECTS) $(libctf@CTF_SOVER_EXT@_la_LIBADD) $(LIBS)
+ 
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)
+--- a/libctf/configure
++++ b/libctf/configure
+@@ -635,6 +635,7 @@ ac_subst_vars='am__EXEEXT_FALSE
+ am__EXEEXT_TRUE
+ LTLIBOBJS
+ LIBOBJS
++CTF_SOVER_EXT
+ VERSION_FLAGS
+ BFD_DEPENDENCIES
+ BFD_LIBADD
+@@ -761,6 +762,7 @@ infodir
+ docdir
+ oldincludedir
+ includedir
++runstatedir
+ localstatedir
+ sharedstatedir
+ sysconfdir
+@@ -844,6 +846,7 @@ datadir='${datarootdir}'
+ sysconfdir='${prefix}/etc'
+ sharedstatedir='${prefix}/com'
+ localstatedir='${prefix}/var'
++runstatedir='${localstatedir}/run'
+ includedir='${prefix}/include'
+ oldincludedir='/usr/include'
+ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+@@ -1096,6 +1099,15 @@ do
+   | -silent | --silent | --silen | --sile | --sil)
+     silent=yes ;;
+ 
++  -runstatedir | --runstatedir | --runstatedi | --runstated \
++  | --runstate | --runstat | --runsta | --runst | --runs \
++  | --run | --ru | --r)
++    ac_prev=runstatedir ;;
++  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
++  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
++  | --run=* | --ru=* | --r=*)
++    runstatedir=$ac_optarg ;;
++
+   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
+     ac_prev=sbindir ;;
+   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
+@@ -1233,7 +1245,7 @@ fi
+ for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
+ 		datadir sysconfdir sharedstatedir localstatedir includedir \
+ 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
+-		libdir localedir mandir
++		libdir localedir mandir runstatedir
+ do
+   eval ac_val=\$$ac_var
+   # Remove trailing slashes.
+@@ -1386,6 +1398,7 @@ Fine tuning of the installation director
+   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
++  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+   --libdir=DIR            object code libraries [EPREFIX/lib]
+   --includedir=DIR        C header files [PREFIX/include]
+   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+@@ -11513,7 +11526,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11516 "configure"
++#line 11529 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11619,7 +11632,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11622 "configure"
++#line 11635 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11881,7 +11894,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -11927,7 +11940,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -11951,7 +11964,7 @@ rm -f core conftest.err conftest.$ac_obj
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -11996,7 +12009,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -12020,7 +12033,7 @@ rm -f core conftest.err conftest.$ac_obj
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -12702,6 +12715,8 @@ main ()
+     if (*(data + i) != *(data3 + i))
+       return 14;
+   close (fd);
++  free (data);
++  free (data3);
+   return 0;
+ }
+ _ACEOF
+@@ -13340,6 +13355,9 @@ if $LD --help 2>&1 | grep -- --version-s
+ fi
+ 
+ 
++CTF_SOVER_EXT=$CTF_SOVER_EXT
++
++
+ ac_config_files="$ac_config_files Makefile"
+ 
+ ac_config_headers="$ac_config_headers config.h"
+--- a/libctf/configure.ac
++++ b/libctf/configure.ac
+@@ -220,6 +220,9 @@ if $LD --help 2>&1 | grep -- --version-s
+ fi
+ AC_SUBST(VERSION_FLAGS)
+ 
++CTF_SOVER_EXT=$CTF_SOVER_EXT
++AC_SUBST(CTF_SOVER_EXT)
++
+ AC_CONFIG_FILES(Makefile)
+ AC_CONFIG_HEADERS(config.h)
+ AC_OUTPUT
+--- a/binutils/Makefile.am
++++ b/binutils/Makefile.am
+@@ -165,8 +165,8 @@ BFDLIB = ../bfd/libbfd.la
+ OPCODES = ../opcodes/libopcodes.la
+ 
+ if ENABLE_LIBCTF
+-LIBCTF = ../libctf/libctf.la
+-LIBCTF_NOBFD = ../libctf/libctf-nobfd.la
++LIBCTF = ../libctf/libctf@CTF_SOVER_EXT@.la
++LIBCTF_NOBFD = ../libctf/libctf-nobfd@CTF_SOVER_EXT@.la
+ else
+ LIBCTF =
+ LIBCTF_NOBFD =
+--- a/binutils/Makefile.in
++++ b/binutils/Makefile.in
+@@ -223,7 +223,8 @@ objcopy_LDADD = $(LDADD)
+ am_objdump_OBJECTS = objdump.$(OBJEXT) dwarf.$(OBJEXT) prdbg.$(OBJEXT) \
+ 	$(am__objects_3) $(am__objects_1) $(am__objects_2)
+ objdump_OBJECTS = $(am_objdump_OBJECTS)
+-@ENABLE_LIBCTF_TRUE@am__DEPENDENCIES_2 = ../libctf/libctf.la
++@ENABLE_LIBCTF_TRUE@am__DEPENDENCIES_2 =  \
++@ENABLE_LIBCTF_TRUE@	../libctf/libctf@CTF_SOVER_EXT@.la
+ am_ranlib_OBJECTS = ar.$(OBJEXT) is-ranlib.$(OBJEXT) arparse.$(OBJEXT) \
+ 	arlex.$(OBJEXT) arsup.$(OBJEXT) rename.$(OBJEXT) \
+ 	binemul.$(OBJEXT) emul_$(EMULATION).$(OBJEXT) $(am__objects_1)
+@@ -231,7 +232,8 @@ ranlib_OBJECTS = $(am_ranlib_OBJECTS)
+ am_readelf_OBJECTS = readelf.$(OBJEXT) version.$(OBJEXT) \
+ 	unwind-ia64.$(OBJEXT) dwarf.$(OBJEXT) $(am__objects_2)
+ readelf_OBJECTS = $(am_readelf_OBJECTS)
+-@ENABLE_LIBCTF_TRUE@am__DEPENDENCIES_3 = ../libctf/libctf-nobfd.la
++@ENABLE_LIBCTF_TRUE@am__DEPENDENCIES_3 =  \
++@ENABLE_LIBCTF_TRUE@	../libctf/libctf-nobfd@CTF_SOVER_EXT@.la
+ am_size_OBJECTS = size.$(OBJEXT) $(am__objects_1)
+ size_OBJECTS = $(am_size_OBJECTS)
+ size_LDADD = $(LDADD)
+@@ -421,6 +423,7 @@ CC_FOR_BUILD = @CC_FOR_BUILD@
+ CFLAGS = @CFLAGS@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
++CTF_SOVER_EXT = @CTF_SOVER_EXT@
+ CYGPATH_W = @CYGPATH_W@
+ DATADIRNAME = @DATADIRNAME@
+ DEFS = @DEFS@
+@@ -547,6 +550,7 @@ pdfdir = @pdfdir@
+ prefix = @prefix@
+ program_transform_name = @program_transform_name@
+ psdir = @psdir@
++runstatedir = @runstatedir@
+ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+@@ -662,9 +666,9 @@ ELFLIBS = elfcomm.c
+ BFDLIB = ../bfd/libbfd.la
+ OPCODES = ../opcodes/libopcodes.la
+ @ENABLE_LIBCTF_FALSE@LIBCTF = 
+-@ENABLE_LIBCTF_TRUE@LIBCTF = ../libctf/libctf.la
++@ENABLE_LIBCTF_TRUE@LIBCTF = ../libctf/libctf@CTF_SOVER_EXT@.la
+ @ENABLE_LIBCTF_FALSE@LIBCTF_NOBFD = 
+-@ENABLE_LIBCTF_TRUE@LIBCTF_NOBFD = ../libctf/libctf-nobfd.la
++@ENABLE_LIBCTF_TRUE@LIBCTF_NOBFD = ../libctf/libctf-nobfd@CTF_SOVER_EXT@.la
+ LIBIBERTY = ../libiberty/libiberty.a
+ POTFILES = $(CFILES) $(DEBUG_SRCS) $(HFILES)
+ EXPECT = expect
+--- a/binutils/configure
++++ b/binutils/configure
+@@ -634,6 +634,7 @@ ac_subst_vars='am__EXEEXT_FALSE
+ am__EXEEXT_TRUE
+ LTLIBOBJS
+ LIBOBJS
++CTF_SOVER_EXT
+ EMULATION_VECTOR
+ EMULATION
+ OBJDUMP_PRIVATE_OFILES
+@@ -781,6 +782,7 @@ infodir
+ docdir
+ oldincludedir
+ includedir
++runstatedir
+ localstatedir
+ sharedstatedir
+ sysconfdir
+@@ -876,6 +878,7 @@ datadir='${datarootdir}'
+ sysconfdir='${prefix}/etc'
+ sharedstatedir='${prefix}/com'
+ localstatedir='${prefix}/var'
++runstatedir='${localstatedir}/run'
+ includedir='${prefix}/include'
+ oldincludedir='/usr/include'
+ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+@@ -1128,6 +1131,15 @@ do
+   | -silent | --silent | --silen | --sile | --sil)
+     silent=yes ;;
+ 
++  -runstatedir | --runstatedir | --runstatedi | --runstated \
++  | --runstate | --runstat | --runsta | --runst | --runs \
++  | --run | --ru | --r)
++    ac_prev=runstatedir ;;
++  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
++  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
++  | --run=* | --ru=* | --r=*)
++    runstatedir=$ac_optarg ;;
++
+   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
+     ac_prev=sbindir ;;
+   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
+@@ -1265,7 +1277,7 @@ fi
+ for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
+ 		datadir sysconfdir sharedstatedir localstatedir includedir \
+ 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
+-		libdir localedir mandir
++		libdir localedir mandir runstatedir
+ do
+   eval ac_val=\$$ac_var
+   # Remove trailing slashes.
+@@ -1418,6 +1430,7 @@ Fine tuning of the installation director
+   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
++  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+   --libdir=DIR            object code libraries [EPREFIX/lib]
+   --includedir=DIR        C header files [PREFIX/include]
+   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+@@ -11533,7 +11546,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11536 "configure"
++#line 11549 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11639,7 +11652,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11642 "configure"
++#line 11655 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -12026,7 +12039,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -12072,7 +12085,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -12096,7 +12109,7 @@ rm -f core conftest.err conftest.$ac_obj
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -12141,7 +12154,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -12165,7 +12178,7 @@ rm -f core conftest.err conftest.$ac_obj
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -13843,6 +13856,8 @@ main ()
+     if (*(data + i) != *(data3 + i))
+       return 14;
+   close (fd);
++  free (data);
++  free (data3);
+   return 0;
+ }
+ _ACEOF
+@@ -15303,6 +15318,9 @@ EMULATION_VECTOR=$targ_emul_vector
+ 
+ 
+ 
++CTF_SOVER_EXT=$CTF_SOVER_EXT
++
++
+ # Required for html and install-html
+ 
+ 
+--- a/binutils/configure.ac
++++ b/binutils/configure.ac
+@@ -480,6 +480,9 @@ EMULATION_VECTOR=$targ_emul_vector
+ AC_SUBST(EMULATION)
+ AC_SUBST(EMULATION_VECTOR)
+ 
++CTF_SOVER_EXT=$CTF_SOVER_EXT
++AC_SUBST(CTF_SOVER_EXT)
++
+ # Required for html and install-html
+ AC_SUBST(datarootdir)
+ AC_SUBST(docdir)
+--- a/ld/Makefile.am
++++ b/ld/Makefile.am
+@@ -145,7 +145,7 @@ AM_CPPFLAGS = -I. -I$(srcdir) -I../bfd -
+ BFDLIB = ../bfd/libbfd.la
+ LIBIBERTY = ../libiberty/libiberty.a
+ if ENABLE_LIBCTF
+-LIBCTF = ../libctf/libctf.la
++LIBCTF = ../libctf/libctf@CTF_SOVER_EXT@.la
+ else
+ LIBCTF =
+ endif
+--- a/ld/Makefile.in
++++ b/ld/Makefile.in
+@@ -181,7 +181,8 @@ am_ld_new_OBJECTS = ldgram.$(OBJEXT) ldl
+ 	plugin.$(OBJEXT) ldbuildid.$(OBJEXT)
+ ld_new_OBJECTS = $(am_ld_new_OBJECTS)
+ am__DEPENDENCIES_1 =
+-@ENABLE_LIBCTF_TRUE@am__DEPENDENCIES_2 = ../libctf/libctf.la
++@ENABLE_LIBCTF_TRUE@am__DEPENDENCIES_2 =  \
++@ENABLE_LIBCTF_TRUE@	../libctf/libctf@CTF_SOVER_EXT@.la
+ AM_V_P = $(am__v_P_@AM_V@)
+ am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
+ am__v_P_0 = false
+@@ -368,6 +369,7 @@ CCDEPMODE = @CCDEPMODE@
+ CFLAGS = @CFLAGS@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
++CTF_SOVER_EXT = @CTF_SOVER_EXT@
+ CXX = @CXX@
+ CXXCPP = @CXXCPP@
+ CXXDEPMODE = @CXXDEPMODE@
+@@ -515,6 +517,7 @@ pdfdir = @pdfdir@
+ prefix = @prefix@
+ program_transform_name = @program_transform_name@
+ psdir = @psdir@
++runstatedir = @runstatedir@
+ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+@@ -631,7 +634,7 @@ AM_CPPFLAGS = -I. -I$(srcdir) -I../bfd -
+ BFDLIB = ../bfd/libbfd.la
+ LIBIBERTY = ../libiberty/libiberty.a
+ @ENABLE_LIBCTF_FALSE@LIBCTF = 
+-@ENABLE_LIBCTF_TRUE@LIBCTF = ../libctf/libctf.la
++@ENABLE_LIBCTF_TRUE@LIBCTF = ../libctf/libctf@CTF_SOVER_EXT@.la
+ 
+ # These all start with e so 'make clean' can find them.
+ ALL_EMULATION_SOURCES = \
+--- a/ld/configure
++++ b/ld/configure
+@@ -634,6 +634,7 @@ ac_subst_vars='am__EXEEXT_FALSE
+ am__EXEEXT_TRUE
+ LTLIBOBJS
+ LIBOBJS
++CTF_SOVER_EXT
+ TESTCTFLIB
+ TESTBFDLIB
+ EMULATION_LIBPATH
+@@ -789,6 +790,7 @@ infodir
+ docdir
+ oldincludedir
+ includedir
++runstatedir
+ localstatedir
+ sharedstatedir
+ sysconfdir
+@@ -894,6 +896,7 @@ datadir='${datarootdir}'
+ sysconfdir='${prefix}/etc'
+ sharedstatedir='${prefix}/com'
+ localstatedir='${prefix}/var'
++runstatedir='${localstatedir}/run'
+ includedir='${prefix}/include'
+ oldincludedir='/usr/include'
+ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+@@ -1146,6 +1149,15 @@ do
+   | -silent | --silent | --silen | --sile | --sil)
+     silent=yes ;;
+ 
++  -runstatedir | --runstatedir | --runstatedi | --runstated \
++  | --runstate | --runstat | --runsta | --runst | --runs \
++  | --run | --ru | --r)
++    ac_prev=runstatedir ;;
++  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
++  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
++  | --run=* | --ru=* | --r=*)
++    runstatedir=$ac_optarg ;;
++
+   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
+     ac_prev=sbindir ;;
+   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
+@@ -1283,7 +1295,7 @@ fi
+ for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
+ 		datadir sysconfdir sharedstatedir localstatedir includedir \
+ 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
+-		libdir localedir mandir
++		libdir localedir mandir runstatedir
+ do
+   eval ac_val=\$$ac_var
+   # Remove trailing slashes.
+@@ -1436,6 +1448,7 @@ Fine tuning of the installation director
+   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
++  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+   --libdir=DIR            object code libraries [EPREFIX/lib]
+   --includedir=DIR        C header files [PREFIX/include]
+   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+@@ -12037,7 +12050,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 12040 "configure"
++#line 12053 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -12143,7 +12156,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 12146 "configure"
++#line 12159 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -15546,7 +15559,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -15592,7 +15605,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -15616,7 +15629,7 @@ rm -f core conftest.err conftest.$ac_obj
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -15661,7 +15674,7 @@ else
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -15685,7 +15698,7 @@ rm -f core conftest.err conftest.$ac_obj
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
++#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -17235,6 +17248,8 @@ main ()
+     if (*(data + i) != *(data3 + i))
+       return 14;
+   close (fd);
++  free (data);
++  free (data3);
+   return 0;
+ }
+ _ACEOF
+@@ -17758,6 +17773,9 @@ fi
+ ac_config_commands="$ac_config_commands default"
+ 
+ 
++CTF_SOVER_EXT=$CTF_SOVER_EXT
++
++
+ 
+ 
+ 
+--- a/ld/configure.ac
++++ b/ld/configure.ac
+@@ -571,6 +571,9 @@ sed -e '/^SRC-POTFILES =/r po/SRC-POTFIL
+     -e "s,@GMOFILES@,$GMOFILES," \
+     po/Makefile.in > po/Makefile]],[[]])
+ 
++CTF_SOVER_EXT=$CTF_SOVER_EXT
++AC_SUBST(CTF_SOVER_EXT)
++
+ dnl Required by html, pdf, install-pdf and install-html
+ AC_SUBST(datarootdir)
+ AC_SUBST(docdir)
